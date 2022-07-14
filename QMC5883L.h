@@ -24,22 +24,14 @@ extern "C" {
 #endif
 
 #include "main.h"
-#include "I2C_Master/MyI2C.h"
+#include "I2C/MyI2C.h"
 #include "QMC5883L_Register.h"
-/* состояние процесса обмена данными с устройством как с отдельным элементом сети
- * 	применяется для отображения состояния процесса работы с устройством для главного кода
- */
-typedef enum QMC5883L_status_t {//состояние устройства
-	QMC_Init,		//устройство не настроено
-	QMC_OK,		//устройство готово к опросу
-	QMC_Faulth	//устройство неисправно
-} QMC5883L_status;
 
-/*	состояние обмена данными с устройством, использовать для завершения функции работы с устройством */
-typedef enum QMC5883L_Connect_Status_t {
-	QMC_Processing, //выполняется работа с устройством: обмен данными, обработка результатов
-	QMC_Complite	//работа с устройством завершена, данные считаны/записаны корректно
-} QMC5883L_Connect_Status;
+enum QMC5883L_ADDRESS {
+	QMC5883L_ADDR = 0x1A
+};
+
+#define QMC5883L_DATA_LEN			6
 
 typedef struct QMC5883L_raw_data_t {
 	int16_t X;
@@ -54,17 +46,17 @@ typedef struct QMC5883L_data_t {
 	float Z;
 } QMC5883L_data;
 //common data struct for sensor
-typedef struct QMC5883L_dev_t {
+typedef struct QMC5883L {
 	const uint8_t addr;
 	uint8_t step;
-	QMC5883L_status status;
+	Device_status_t status;
 	QMC5883L_raw_data raw;
 	QMC5883L_data data;
-} QMC5883L_dev;
+} QMC5883L_t;
 
 //INITIALIZATION	================================================================
-QMC5883L_Connect_Status QMC5883L_Init(I2C_Connection *_i2c, QMC5883L_dev *dev, uint8_t *pbuffer);
-QMC5883L_Connect_Status QMC5883L_GetData(I2C_Connection *_i2c, QMC5883L_dev *dev, uint8_t *pbuffer);
+uint8_t QMC5883L_Init(I2C_Connection *_i2c, QMC5883L_t *dev);
+uint8_t QMC5883L_GetData(I2C_Connection *_i2c, QMC5883L_t *dev);
 
 #ifdef __cplusplus
 }
