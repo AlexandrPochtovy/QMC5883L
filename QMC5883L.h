@@ -31,13 +31,12 @@ enum QMC5883L_ADDRESS {
 	QMC5883L_ADDR = 0x1A
 };
 
-#define QMC5883L_DATA_LEN			6
+#define QMC5883L_DATA_LEN 6
 
 typedef struct QMC5883L_raw_data_t {
 	int16_t X;
 	int16_t Y;
 	int16_t Z;
-	uint8_t status;
 } QMC5883L_raw_data;
 
 typedef struct QMC5883L_data_t {
